@@ -92,6 +92,12 @@ namespace XUnitTestProject1.Controllers
             var httpResponse = await _client.PostAsync($"{_client.BaseAddress.AbsoluteUri}api/users", c);
 
             httpResponse.EnsureSuccessStatusCode();
+            var content = await httpResponse.Content.ReadAsStringAsync();
+            var user = JsonConvert.DeserializeObject<User>(content);
+
+            Assert.True(user.IdUser == 2);
+            Assert.True(user.Name == "Przemek");
+            Assert.True(user.Login == "pbacca");
         }
 
         [Fact]
@@ -103,8 +109,6 @@ namespace XUnitTestProject1.Controllers
                 IdBookBorrow = 1,
                 IdUser = 1,
                 IdBook = 1,
-                BorrowDate = DateTime.Now,
-                ReturnDate = DateTime.Now,
                 Comments = "nothing"
     };
 
@@ -112,6 +116,11 @@ namespace XUnitTestProject1.Controllers
             var httpResponse = await _client.PostAsync($"{_client.BaseAddress.AbsoluteUri}api/book-borrows", c);
 
             httpResponse.EnsureSuccessStatusCode();
+            var content = await httpResponse.Content.ReadAsStringAsync();
+            var bookBorrow = JsonConvert.DeserializeObject<BookBorrow>(content);
+
+            Assert.True(bookBorrow.IdBookBorrow == 1);
+            Assert.True(bookBorrow.IdUser == 1);
         }
 
         [Fact]
@@ -120,11 +129,8 @@ namespace XUnitTestProject1.Controllers
             //Arrange i Act
             var newBookBorrow = new BookBorrow
             {
-                IdBookBorrow = 1,
                 IdUser = 1,
                 IdBook = 1,
-                BorrowDate = DateTime.Now,
-                ReturnDate = DateTime.Now,
                 Comments = "Completelynothing"
             };
 
